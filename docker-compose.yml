@@ -1,0 +1,34 @@
+version: "3"
+services:
+  testing-colour-api-node:
+    container_name: testing_colour_api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - colour_api
+    networks:
+      - colour_net
+  colour_api:
+    container_name: colour_api
+    image: colourapi_colour_api
+    ports:
+      - "8080:80"
+    depends_on:
+      - sql_server
+    networks:
+      - colour_net
+  sql_server:
+    container_name: sql_server
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      MSSQL_PID: "Developer"
+      ACCEPT_EULA: "Y"
+      DB_USERNAME: "sa"
+      SA_PASSWORD: "Pa55w0rd2019"
+    ports:
+      - "1433:1433"
+    networks:
+      - colour_net
+networks:
+  colour_net:
